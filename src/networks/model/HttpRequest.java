@@ -40,5 +40,7 @@ public class HttpRequest implements Serializable {
 	public void setConnection(ConnectionType connection) {
 		this.connection = connection;
 	}
+	
+
 
 }
