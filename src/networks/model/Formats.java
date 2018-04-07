@@ -1,5 +1,5 @@
 package networks.model;
 
 public enum Formats {
-	JPEG, MP4, PNG;
+	JPEG, MP4, PNG, TXT, JPG;
 }
