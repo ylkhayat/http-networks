@@ -39,19 +39,7 @@ public class TCPClientView extends JFrame {
 	private JLabel lblNewLabel_1;
 	private JLabel serverPortLbl;
 	private JScrollPane scrollPane_1;
-	private LinkedList<String> usernames = new LinkedList<String>();
-	private LinkedList<JTextArea> areas = new LinkedList<JTextArea>();
 
-	public LinkedList<JTextArea> getAreas() {
-		return areas;
-	}
-
-	public void setAreas(LinkedList<JTextArea> areas) {
-		this.areas = areas;
-	}
-
-	// private Hashtable<String, JTextArea> areas = new Hashtable<String,
-	// JTextArea>();
 	private JPanel panel;
 	private JTextField textField;
 
@@ -183,14 +171,6 @@ public class TCPClientView extends JFrame {
 
 	public JPanel getPanel() {
 		return panel;
-	}
-
-	public LinkedList<String> getUsernames() {
-		return usernames;
-	}
-
-	public void setUsernames(LinkedList<String> usernames) {
-		this.usernames = usernames;
 	}
 
 	public void setPanel(JPanel panel) {
