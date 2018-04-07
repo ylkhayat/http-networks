@@ -33,7 +33,6 @@ public class TCPClientView extends JFrame {
 
 	private JFrame frmConversationWindow;
 	private TCPClient client;
-	private JLabel clientName;
 	private JScrollPane scrollPane;
 	private JScrollPane msgPnl;
 	private JButton btnJoinBtn;
@@ -42,7 +41,8 @@ public class TCPClientView extends JFrame {
 	private JScrollPane scrollPane_1;
 	private LinkedList<String> usernames = new LinkedList<String>();
 	private LinkedList<JTextArea> areas = new LinkedList<JTextArea>();
-public LinkedList<JTextArea> getAreas() {
+
+	public LinkedList<JTextArea> getAreas() {
 		return areas;
 	}
 
@@ -50,8 +50,11 @@ public LinkedList<JTextArea> getAreas() {
 		this.areas = areas;
 	}
 
-	//	private Hashtable<String, JTextArea> areas = new Hashtable<String, JTextArea>();
+	// private Hashtable<String, JTextArea> areas = new Hashtable<String,
+	// JTextArea>();
 	private JPanel panel;
+	private JTextField textField;
+
 	public JScrollPane getScrollPane_1() {
 		return scrollPane_1;
 	}
@@ -116,7 +119,7 @@ public LinkedList<JTextArea> getAreas() {
 		scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		scrollPane.setBounds(0, 24, 111, 213);
 		usersPnl.add(scrollPane);
-		
+
 		panel = new JPanel();
 		scrollPane.setViewportView(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -141,13 +144,9 @@ public LinkedList<JTextArea> getAreas() {
 		msgPnl.setViewportBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		msgPnl.setBounds(0, 30, 323, 171);
 		chatPnl.add(msgPnl);
-		
+
 		scrollPane_1 = new JScrollPane();
 		msgPnl.setViewportView(scrollPane_1);
-
-		clientName = new JLabel("Hamada");
-		clientName.setBounds(10, 5, 125, 21);
-		chatPnl.add(clientName);
 
 		serverPortLbl = new JLabel("");
 		serverPortLbl.setBounds(224, 8, 89, 14);
@@ -156,10 +155,14 @@ public LinkedList<JTextArea> getAreas() {
 		lblNewLabel_1 = new JLabel("Server:");
 		lblNewLabel_1.setBounds(145, 8, 71, 14);
 		chatPnl.add(lblNewLabel_1);
-		
+
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(10, 212, 303, 38);
 		chatPnl.add(scrollPane_2);
+
+		textField = new JTextField();
+		scrollPane_2.setViewportView(textField);
+		textField.setColumns(10);
 	}
 
 	public JButton getBtnJoinBtn() {
@@ -170,13 +173,13 @@ public LinkedList<JTextArea> getAreas() {
 		this.btnJoinBtn = btnJoinBtn;
 	}
 
-//	public Hashtable<String, JTextArea> getAreas() {
-//		return areas;
-//	}
-//
-//	public void setAreas(Hashtable<String, JTextArea> areas) {
-//		this.areas = areas;
-//	}
+	// public Hashtable<String, JTextArea> getAreas() {
+	// return areas;
+	// }
+	//
+	// public void setAreas(Hashtable<String, JTextArea> areas) {
+	// this.areas = areas;
+	// }
 
 	public JPanel getPanel() {
 		return panel;
@@ -200,14 +203,6 @@ public LinkedList<JTextArea> getAreas() {
 
 	public void setServerPortLbl(String serverPortLbl) {
 		this.serverPortLbl.setText(serverPortLbl);
-	}
-
-	public JLabel getClientName() {
-		return clientName;
-	}
-
-	public void setClientName(String clientName) {
-		this.clientName.setText(clientName);
 	}
 
 	public JScrollPane getScrollPane() {
