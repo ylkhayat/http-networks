@@ -58,7 +58,10 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 						clientViewTemp.setServerPortLbl("6789");
 						clientView.add(clientViewTemp);
 						clientViewTemp.setClient(clientTemp);
-						loadDocRoot(clientViewTemp);
+						LinkedList<JButton> listBtns = loadDocRoot(clientViewTemp);
+						for (JButton jButton : listBtns) {
+							clientViewTemp.getDocRootPanel().add(jButton);
+						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -67,25 +70,36 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 
 			});
 			client.start();
-
+		} else if (a.getSource() instanceof JButton) {
+			JButton temp = (JButton) a.getSource();
+			for (TCPClientView tcpClientView : clientView) {
+				if (temp.getParent().equals(tcpClientView.getDocRootPanel())) {
+					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
+					current.request(temp.getText());
+					System.out.println(temp.getText());
+				}
+			}
 		}
 
 	}
 
-	public void listFilesForFolder(File folder, LinkedList<String> s) {
+	public void listFilesForFolder(File folder, LinkedList<JButton> s) {
 		for (final File fileEntry : folder.listFiles()) {
 			if (fileEntry.isDirectory()) {
 				listFilesForFolder(fileEntry, s);
 			} else {
-				s.add(fileEntry.getName());
+				JButton tempBtn = new JButton(fileEntry.getName());
+				tempBtn.addActionListener(this);
+				s.add(tempBtn);
 			}
 		}
 	}
 
-	public void loadDocRoot(TCPClientView view) {
-		LinkedList<String> s = new LinkedList<String>();
+	public LinkedList<JButton> loadDocRoot(TCPClientView view) {
+		LinkedList<JButton> s = new LinkedList<JButton>();
 		listFilesForFolder(new File("docroot"), s);
 		System.out.println(s.toString());
+		return s;
 	}
 
 	@Override

@@ -37,10 +37,37 @@ public class HttpRequest implements Serializable {
 		return connection;
 	}
 
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
 	public void setConnection(ConnectionType connection) {
 		this.connection = connection;
 	}
 	
-
+	public String toString(){
+		String s = getMethod() +" " + getUrl() + " " + getVersion() + "\n" + getHost() + "\n" + getFormat() + " \n" + getConnection() ;
+		return s ;
+	}
 
 }

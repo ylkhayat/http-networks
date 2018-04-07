@@ -67,4 +67,9 @@ public class HttpResponse implements Serializable {
 	public void setConnection(ConnectionType connection) {
 		this.connection = connection;
 	}
+	
+	public String toString(){
+		String s = getStatus() +" "  + getVersion() + "\n" + getTimestamp() + "\n" + getFormat() + " \n" + getConnection() ;
+		return s ;
+	}
 }
