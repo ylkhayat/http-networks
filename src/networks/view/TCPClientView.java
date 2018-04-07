@@ -105,17 +105,12 @@ public class TCPClientView extends JFrame {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		scrollPane.setBounds(0, 24, 111, 213);
+		scrollPane.setBounds(0, 24, 111, 237);
 		usersPnl.add(scrollPane);
-
-		docRootPanel = new JPanel();
-		scrollPane.setViewportView(docRootPanel);
-		docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
-
-		btnJoinBtn = new JButton("Request");
-		btnJoinBtn.setToolTipText("Type the name you'd like in the console then click this.");
-		btnJoinBtn.setBounds(0, 236, 112, 25);
-		usersPnl.add(btnJoinBtn);
+		
+				docRootPanel = new JPanel();
+				scrollPane.setViewportView(docRootPanel);
+				docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
 
 		JLabel lblNewLabel = new JLabel("Doc-Root");
 		lblNewLabel.setBounds(2, 0, 109, 25);
@@ -145,12 +140,18 @@ public class TCPClientView extends JFrame {
 		chatPnl.add(lblNewLabel_1);
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 212, 303, 38);
+		scrollPane_2.setBounds(10, 212, 181, 38);
 		chatPnl.add(scrollPane_2);
-
-		textField = new JTextField();
-		scrollPane_2.setViewportView(textField);
-		textField.setColumns(10);
+		
+				textField = new JTextField();
+				scrollPane_2.setViewportView(textField);
+				textField.setColumns(10);
+				
+						btnJoinBtn = new JButton("Custom Request");
+						btnJoinBtn.setBounds(201, 212, 112, 38);
+						chatPnl.add(btnJoinBtn);
+						btnJoinBtn.setFont(new Font("Tahoma", Font.PLAIN, 9));
+						btnJoinBtn.setToolTipText("Type the name you'd like in the console then click this.");
 	}
 
 	public JButton getBtnJoinBtn() {

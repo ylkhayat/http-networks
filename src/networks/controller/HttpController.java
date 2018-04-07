@@ -60,6 +60,7 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 						clientViewTemp.setClient(clientTemp);
 						LinkedList<JButton> listBtns = loadDocRoot(clientViewTemp);
 						for (JButton jButton : listBtns) {
+							jButton.setBackground(Color.WHITE);
 							clientViewTemp.getDocRootPanel().add(jButton);
 						}
 					} catch (IOException e) {
