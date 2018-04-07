@@ -1,7 +1,9 @@
 package networks.model;
 
+import java.awt.Desktop;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
 import java.util.Scanner;
 import java.lang.Object;
 import javax.net.ssl.HttpsURLConnection;
@@ -40,15 +42,19 @@ public class TCPClient {
 							line = console.readLine();
 							switch (line) {
 							case "png":
-								con.setFormat(Formats.PNG);
+								con.setFormat(Formats.png);
 								passed = true;
 								break;
-							case "jpeg":
-								con.setFormat(Formats.JPEG);
+							case "jpg":
+								con.setFormat(Formats.jpg);
 								passed = true;
 								break;
 							case "mp4":
-								con.setFormat(Formats.MP4);
+								con.setFormat(Formats.mp4);
+								passed = true;
+								break;
+							case "txt":
+								con.setFormat(Formats.txt);
 								passed = true;
 								break;
 							default:
@@ -93,8 +99,19 @@ public class TCPClient {
 						lineBack = (HttpResponse) inFromServer.readObject();
 						System.out.println("Ara khara");
 						System.out.println(lineBack.getStatus());
-					} catch (OptionalDataException e) {
-						System.out.println(e.eof + "    " + e.length);
+
+						if(lineBack.getStatus().equals("200 OK")){
+							String filename = lineBack.getUrl()+"."+lineBack.getFormat();
+							File fileBack = new File("C:/Users/omar elsobky/Desktop/HttpNetworks/ClientRecFiles/"+filename);
+							byte[] content = (byte[]) inFromServer.readObject();
+							Files.write(fileBack.toPath(), content);
+							Desktop desktop = Desktop.getDesktop();
+							desktop.open(fileBack);
+						}
+						
+					}catch( OptionalDataException e){
+						System.out.println(e.eof+"    "+ e.length);
+
 						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -134,23 +151,23 @@ public class TCPClient {
 
 			switch (line) {
 			case "png":
-				con.setFormat(Formats.PNG);
+				con.setFormat(Formats.png);
 				passed = true;
 				break;
 			case "jpg":
-				con.setFormat(Formats.JPG);
+				con.setFormat(Formats.jpg);
 				passed = true;
 				break;
 			case "jpeg":
-				con.setFormat(Formats.JPEG);
+				con.setFormat(Formats.jpeg);
 				passed = true;
 				break;
 			case "mp4":
-				con.setFormat(Formats.MP4);
+				con.setFormat(Formats.mp4);
 				passed = true;
 				break;
 			case "txt":
-				con.setFormat(Formats.TXT);
+				con.setFormat(Formats.txt);
 				passed = true;
 				break;
 			default:

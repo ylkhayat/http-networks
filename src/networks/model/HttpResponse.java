@@ -13,6 +13,15 @@ public class HttpResponse implements Serializable {
 	Timestamp timestamp;
 	Formats format;
 	ConnectionType connection;
+	String Url ; 
+
+	public String getUrl() {
+		return Url;
+	}
+
+	public void setUrl(String url) {
+		Url = url;
+	}
 
 	public HttpResponse() {
 		version = "HTTP/1.1";
@@ -57,5 +66,10 @@ public class HttpResponse implements Serializable {
 
 	public void setConnection(ConnectionType connection) {
 		this.connection = connection;
+	}
+	
+	public String toString(){
+		String s = getStatus() +" "  + getVersion() + "\n" + getTimestamp() + "\n" + getFormat() + " \n" + getConnection() ;
+		return s ;
 	}
 }

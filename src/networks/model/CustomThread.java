@@ -2,6 +2,7 @@ package networks.model;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class CustomThread extends Thread {
@@ -34,7 +35,12 @@ public class CustomThread extends Thread {
 				msg = (HttpRequest) streamIn.readObject();
 				req.add(msg);
 				HttpResponse resp = respond(msg);
+				
 				outToClient.writeObject(resp);
+				if(resp.getStatus().equals("200 OK")){
+					File file = new File("C:/Users/omar elsobky/Desktop/HttpNetworks/docroot/"+msg.getUrl()+"."+msg.getFormat());
+					sendfile(outToClient, file);
+				}
 				
 			} while (true);
 		} catch (IOException e) {
@@ -46,7 +52,7 @@ public class CustomThread extends Thread {
 
 	}
 
-	public void listFilesForFolder(File folder, LinkedList<String> s) {
+	public void listFilesForFolder(File folder, ArrayList<String> s) {
 		for (final File fileEntry : folder.listFiles()) {
 			if (fileEntry.isDirectory()) {
 				listFilesForFolder(fileEntry, s);
@@ -72,21 +78,48 @@ public class CustomThread extends Thread {
 	}
 
 	public HttpResponse respond(HttpRequest h) {
-		File folder = new File("docroot");
-		LinkedList<String> s = new LinkedList<String>();
+		final File folder = new File("C:/Users/omar elsobky/Desktop/HttpNetworks/docroot");
+		listFilesForFolder(folder);
+		ArrayList<String> s = new ArrayList<String>();
 		listFilesForFolder(folder, s);
 		HttpResponse resp = new HttpResponse();
-		int index = s.indexOf(h.getUrl());
+		String filename = h.getUrl()+"."+h.getFormat() ;
+		int index = s.indexOf(filename);
+		
 		resp.setFormat(h.getFormat());
 		resp.setConnection(h.getConnection());
-		if (index != -1 && getExtension(s.get(index)).equals(getExtension(h.getUrl()))) {
+		resp.setUrl(h.getUrl());
+		if (index != -1 ) {
 			resp.setStatus("200 OK");
+			
 		} else {
 			resp.setStatus("404 Not Found");
 		}
 		return resp;
 
 	}
+	
+	public void sendfile( ObjectOutputStream outToclient , File file ){
+		try{
+		byte[] content = Files.readAllBytes(file.toPath());
+		outToclient.writeObject(content);
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	public void listFilesForFolder(final File folder) {
+	    for (final File fileEntry : folder.listFiles()) {
+	        if (fileEntry.isDirectory()) {
+	            listFilesForFolder(fileEntry);
+	        } else {
+	            System.out.println(fileEntry.getName());
+	        }
+	    }
+	}
+	
+	
 
 	public void close() throws IOException {
 		if (socket != null)
