@@ -40,7 +40,7 @@ public class TCPClientView extends JFrame {
 	private JLabel serverPortLbl;
 	private JScrollPane scrollPane_1;
 
-	private JPanel panel;
+	private JPanel docRootPanel;
 	private JTextField textField;
 
 	public JScrollPane getScrollPane_1() {
@@ -88,7 +88,7 @@ public class TCPClientView extends JFrame {
 	 */
 	private void initialize() {
 		frmConversationWindow = new JFrame();
-		frmConversationWindow.setTitle("Conversation Window");
+		frmConversationWindow.setTitle("Http Window");
 		frmConversationWindow.setBounds(100, 100, 450, 300);
 		frmConversationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -108,9 +108,9 @@ public class TCPClientView extends JFrame {
 		scrollPane.setBounds(0, 24, 111, 213);
 		usersPnl.add(scrollPane);
 
-		panel = new JPanel();
-		scrollPane.setViewportView(panel);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		docRootPanel = new JPanel();
+		scrollPane.setViewportView(docRootPanel);
+		docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
 
 		btnJoinBtn = new JButton("Request");
 		btnJoinBtn.setToolTipText("Type the name you'd like in the console then click this.");
@@ -169,12 +169,12 @@ public class TCPClientView extends JFrame {
 	// this.areas = areas;
 	// }
 
-	public JPanel getPanel() {
-		return panel;
+	public JPanel getDocRootPanel() {
+		return docRootPanel;
 	}
 
-	public void setPanel(JPanel panel) {
-		this.panel = panel;
+	public void setDocRootPanel(JPanel panel) {
+		this.docRootPanel = panel;
 	}
 
 	public JLabel getServerPortLbl() {
