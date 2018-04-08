@@ -21,7 +21,8 @@ public class CustomThread extends Thread {
 		try {
 			streamIn = new ObjectInputStream(socket.getInputStream());
 			outToClient = new ObjectOutputStream(socket.getOutputStream());
-			//outToClient.writeBytes("Successfully connected, type 'Commands' for different features." + '\n');
+			// outToClient.writeBytes("Successfully connected, type 'Commands'
+			// for different features." + '\n');
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,13 +36,14 @@ public class CustomThread extends Thread {
 				msg = (HttpRequest) streamIn.readObject();
 				req.add(msg);
 				HttpResponse resp = respond(msg);
-				
+
 				outToClient.writeObject(resp);
-				if(resp.getStatus().equals("200 OK")){
-					File file = new File("C:/Users/omar elsobky/Desktop/HttpNetworks/docroot/"+msg.getUrl()+"."+msg.getFormat());
+				if (resp.getStatus().equals("200 OK")) {
+					File file = new File("docroot/" + msg.getUrl());
+					System.out.println(msg.getUrl());
 					sendfile(outToClient, file);
 				}
-				
+
 			} while (true);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -78,48 +80,48 @@ public class CustomThread extends Thread {
 	}
 
 	public HttpResponse respond(HttpRequest h) {
-		final File folder = new File("C:/Users/omar elsobky/Desktop/HttpNetworks/docroot");
-		listFilesForFolder(folder);
+		final File folder = new File("docroot");
+		// listFilesForFolder(folder);
 		ArrayList<String> s = new ArrayList<String>();
+
 		listFilesForFolder(folder, s);
+		System.out.println(s.toString());
 		HttpResponse resp = new HttpResponse();
-		String filename = h.getUrl()+"."+h.getFormat() ;
+		String filename = h.getUrl();
+		System.out.println(filename);
 		int index = s.indexOf(filename);
-		
+
 		resp.setFormat(h.getFormat());
 		resp.setConnection(h.getConnection());
 		resp.setUrl(h.getUrl());
-		if (index != -1 ) {
+		if (index != -1) {
 			resp.setStatus("200 OK");
-			
+
 		} else {
 			resp.setStatus("404 Not Found");
 		}
 		return resp;
 
 	}
-	
-	public void sendfile( ObjectOutputStream outToclient , File file ){
-		try{
-		byte[] content = Files.readAllBytes(file.toPath());
-		outToclient.writeObject(content);
-		}
-		catch(Exception e){
+
+	public void sendfile(ObjectOutputStream outToclient, File file) {
+		try {
+			byte[] content = Files.readAllBytes(file.toPath());
+			outToclient.writeObject(content);
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
-	
+
 	public void listFilesForFolder(final File folder) {
-	    for (final File fileEntry : folder.listFiles()) {
-	        if (fileEntry.isDirectory()) {
-	            listFilesForFolder(fileEntry);
-	        } else {
-	            System.out.println(fileEntry.getName());
-	        }
-	    }
+		for (final File fileEntry : folder.listFiles()) {
+			if (fileEntry.isDirectory()) {
+				listFilesForFolder(fileEntry);
+			} else {
+				System.out.println(fileEntry.getName());
+			}
+		}
 	}
-	
-	
 
 	public void close() throws IOException {
 		if (socket != null)

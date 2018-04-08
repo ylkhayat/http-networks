@@ -28,6 +28,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import javax.swing.JTextPane;
 
 public class TCPClientView extends JFrame {
 
@@ -35,20 +36,23 @@ public class TCPClientView extends JFrame {
 	private TCPClient client;
 	private JScrollPane scrollPane;
 	private JScrollPane msgPnl;
-	private JButton btnJoinBtn;
+	private JButton btnRequest;
 	private JLabel lblNewLabel_1;
 	private JLabel serverPortLbl;
-	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPnlCustom;
 
 	private JPanel docRootPanel;
-	private JTextField textField;
+	private JTextField inputField;
+	private JScrollPane containerCustom;
+	private JPanel chatPnl;
+	private JTextPane textPane;
 
 	public JScrollPane getScrollPane_1() {
-		return scrollPane_1;
+		return scrollPnlCustom;
 	}
 
 	public void setScrollPane_1(JScrollPane scrollPane_1) {
-		this.scrollPane_1 = scrollPane_1;
+		this.scrollPnlCustom = scrollPane_1;
 	}
 
 	public JFrame getFrmConversationWindow() {
@@ -107,17 +111,17 @@ public class TCPClientView extends JFrame {
 		scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		scrollPane.setBounds(0, 24, 111, 237);
 		usersPnl.add(scrollPane);
-		
-				docRootPanel = new JPanel();
-				scrollPane.setViewportView(docRootPanel);
-				docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
+
+		docRootPanel = new JPanel();
+		scrollPane.setViewportView(docRootPanel);
+		docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
 
 		JLabel lblNewLabel = new JLabel("Doc-Root");
 		lblNewLabel.setBounds(2, 0, 109, 25);
 		usersPnl.add(lblNewLabel);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-		JPanel chatPnl = new JPanel();
+		chatPnl = new JPanel();
 		chatPnl.setBorder(new LineBorder(new Color(0, 0, 0)));
 		chatPnl.setBounds(0, 0, 323, 261);
 		mainPnl.add(chatPnl);
@@ -128,8 +132,11 @@ public class TCPClientView extends JFrame {
 		msgPnl.setBounds(0, 30, 323, 171);
 		chatPnl.add(msgPnl);
 
-		scrollPane_1 = new JScrollPane();
-		msgPnl.setViewportView(scrollPane_1);
+		scrollPnlCustom = new JScrollPane();
+		msgPnl.setViewportView(scrollPnlCustom);
+
+		textPane = new JTextPane();
+		scrollPnlCustom.setViewportView(textPane);
 
 		serverPortLbl = new JLabel("");
 		serverPortLbl.setBounds(224, 8, 89, 14);
@@ -139,27 +146,19 @@ public class TCPClientView extends JFrame {
 		lblNewLabel_1.setBounds(145, 8, 71, 14);
 		chatPnl.add(lblNewLabel_1);
 
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 212, 181, 38);
-		chatPnl.add(scrollPane_2);
-		
-				textField = new JTextField();
-				scrollPane_2.setViewportView(textField);
-				textField.setColumns(10);
-				
-						btnJoinBtn = new JButton("Custom Request");
-						btnJoinBtn.setBounds(201, 212, 112, 38);
-						chatPnl.add(btnJoinBtn);
-						btnJoinBtn.setFont(new Font("Tahoma", Font.PLAIN, 9));
-						btnJoinBtn.setToolTipText("Type the name you'd like in the console then click this.");
-	}
+		containerCustom = new JScrollPane();
+		containerCustom.setBounds(10, 212, 181, 38);
+		chatPnl.add(containerCustom);
 
-	public JButton getBtnJoinBtn() {
-		return btnJoinBtn;
-	}
+		inputField = new JTextField();
+		containerCustom.setViewportView(inputField);
+		inputField.setColumns(10);
 
-	public void setBtnJoinBtn(JButton btnJoinBtn) {
-		this.btnJoinBtn = btnJoinBtn;
+		btnRequest = new JButton("Custom Request");
+		btnRequest.setBounds(201, 212, 112, 38);
+		chatPnl.add(btnRequest);
+		btnRequest.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnRequest.setToolTipText("Type the name you'd like in the console then click this.");
 	}
 
 	// public Hashtable<String, JTextArea> getAreas() {
@@ -170,8 +169,48 @@ public class TCPClientView extends JFrame {
 	// this.areas = areas;
 	// }
 
+	public JScrollPane getScrollPnlCustom() {
+		return scrollPnlCustom;
+	}
+
+	public JTextPane getTextPane() {
+		return textPane;
+	}
+
+	public void setTextPane(JTextPane textPane) {
+		this.textPane = textPane;
+	}
+
+	public void setScrollPnlCustom(JScrollPane scrollPnlCustom) {
+		this.scrollPnlCustom = scrollPnlCustom;
+	}
+
+	public JPanel getChatPnl() {
+		return chatPnl;
+	}
+
+	public void setChatPnl(JPanel chatPnl) {
+		this.chatPnl = chatPnl;
+	}
+
+	public JScrollPane getContainerCustom() {
+		return containerCustom;
+	}
+
+	public void setContainerCustom(JScrollPane containerCustom) {
+		this.containerCustom = containerCustom;
+	}
+
 	public JPanel getDocRootPanel() {
 		return docRootPanel;
+	}
+
+	public JTextField getInputField() {
+		return inputField;
+	}
+
+	public void setInputField(JTextField inputField) {
+		this.inputField = inputField;
 	}
 
 	public void setDocRootPanel(JPanel panel) {
@@ -202,12 +241,12 @@ public class TCPClientView extends JFrame {
 		this.msgPnl = msgPnl;
 	}
 
-	public JButton getJoinBtn() {
-		return btnJoinBtn;
+	public JButton getBtnRequest() {
+		return btnRequest;
 	}
 
 	public void setBtnNewButton(JButton btnNewButton) {
-		this.btnJoinBtn = btnNewButton;
+		this.btnRequest = btnNewButton;
 	}
 
 	public TCPClient getClient() {

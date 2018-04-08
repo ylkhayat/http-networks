@@ -15,7 +15,17 @@ public class TCPClient {
 	Socket socket = null;
 	BufferedReader console = null;
 	ObjectOutputStream streamOut = null;
+
+	public HttpResponse getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(HttpResponse current) {
+		this.current = current;
+	}
+
 	ObjectInputStream inFromServer = null;
+	HttpResponse current;
 	boolean joined;
 
 	public TCPClient(String host, int serverPort) throws UnknownHostException, IOException {
@@ -24,6 +34,7 @@ public class TCPClient {
 		console = new BufferedReader(new InputStreamReader(System.in));
 		streamOut = new ObjectOutputStream(socket.getOutputStream());
 		inFromServer = new ObjectInputStream(socket.getInputStream());
+		new File("ClientRecFiles").mkdirs();
 		Thread write = new Thread(new Runnable() {
 			public void run() {
 				String line = "";
@@ -97,20 +108,21 @@ public class TCPClient {
 				while (true) {
 					try {
 						lineBack = (HttpResponse) inFromServer.readObject();
-						System.out.println("Ara khara");
+						current = lineBack;
 						System.out.println(lineBack.getStatus());
 
-						if(lineBack.getStatus().equals("200 OK")){
-							String filename = lineBack.getUrl()+"."+lineBack.getFormat();
-							File fileBack = new File("C:/Users/omar elsobky/Desktop/HttpNetworks/ClientRecFiles/"+filename);
+						if (lineBack.getStatus().equals("200 OK")) {
+							String filename = lineBack.getUrl();
+
+							File fileBack = new File("ClientRecFiles/" + filename);
 							byte[] content = (byte[]) inFromServer.readObject();
 							Files.write(fileBack.toPath(), content);
 							Desktop desktop = Desktop.getDesktop();
 							desktop.open(fileBack);
 						}
-						
-					}catch( OptionalDataException e){
-						System.out.println(e.eof+"    "+ e.length);
+
+					} catch (OptionalDataException e) {
+						System.out.println(e.eof + "    " + e.length);
 
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -142,7 +154,7 @@ public class TCPClient {
 			return fileName.substring(dotInd + 1).toLowerCase();
 	}
 
-	public void request(String line) {
+	public String request(String line) {
 		HttpRequest con = new HttpRequest();
 		boolean passed = false;
 		try {
@@ -191,6 +203,7 @@ public class TCPClient {
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
+		return con.toStringCustom();
 	}
 
 	public void stop() {

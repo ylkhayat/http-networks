@@ -23,6 +23,7 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 	LinkedList<TCPClient> clients;
 	MainServerView serverView;
 	LinkedList<TCPClientView> clientView;
+	HttpController inst;
 
 	public HttpController() {
 		serverView = new MainServerView();
@@ -30,6 +31,7 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 		serverView.getAddClientBtn().addActionListener(this);
 		clients = new LinkedList<TCPClient>();
 		clientView = new LinkedList<TCPClientView>();
+		inst = this;
 
 	}
 
@@ -47,13 +49,13 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 			serverView.getServPortVLbl1().setText("Port: 6789");
 			serverView.getAddClientBtn().setEnabled(true);
 		} else if (a.getSource() instanceof JButton && a.getSource().equals(serverView.getAddClientBtn())) {
-			System.out.println("hena");
 			Thread client = new Thread(new Runnable() {
 				public void run() {
 					try {
 						TCPClient clientTemp = new TCPClient("Youssef", 6789);
 						clients.add(clientTemp);
 						TCPClientView clientViewTemp = new TCPClientView();
+						clientViewTemp.getBtnRequest().addActionListener(inst);
 						clientViewTemp.getFrmConversationWindow().setVisible(true);
 						clientViewTemp.setServerPortLbl("6789");
 						clientView.add(clientViewTemp);
@@ -68,16 +70,31 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 						e.printStackTrace();
 					}
 				}
-
 			});
 			client.start();
 		} else if (a.getSource() instanceof JButton) {
+			System.out.println("Hena");
 			JButton temp = (JButton) a.getSource();
+
 			for (TCPClientView tcpClientView : clientView) {
+				System.out.println(temp.getParent().equals(tcpClientView.getChatPnl()));
 				if (temp.getParent().equals(tcpClientView.getDocRootPanel())) {
 					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
-					current.request(temp.getText());
-					System.out.println(temp.getText());
+					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
+							+ "--------REQUEST---------" + '\n' + current.request(temp.getText()) + '\n');
+					while (current.getCurrent() == null)
+						;
+					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
+							+ "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n');
+				} else if (temp.getParent().equals(tcpClientView.getChatPnl())) {
+					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
+					tcpClientView.getTextPane()
+							.setText(tcpClientView.getTextPane().getText() + "--------REQUEST---------" + '\n'
+									+ current.request(tcpClientView.getInputField().getText()) + '\n');
+					while (current.getCurrent() == null)
+						;
+					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
+							+ "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n');
 				}
 			}
 		}
@@ -99,7 +116,6 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 	public LinkedList<JButton> loadDocRoot(TCPClientView view) {
 		LinkedList<JButton> s = new LinkedList<JButton>();
 		listFilesForFolder(new File("docroot"), s);
-		System.out.println(s.toString());
 		return s;
 	}
 

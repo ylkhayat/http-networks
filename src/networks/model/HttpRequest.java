@@ -64,10 +64,12 @@ public class HttpRequest implements Serializable {
 	public void setConnection(ConnectionType connection) {
 		this.connection = connection;
 	}
-	
-	public String toString(){
-		String s = getMethod() +" " + getUrl() + " " + getVersion() + "\n" + getHost() + "\n" + getFormat() + " \n" + getConnection() ;
-		return s ;
+
+	public String toStringCustom() {
+		String s = getMethod() + ": " + getUrl() + "\n" + "Version: " + getVersion() + "\n" + "Host: " + getHost()
+				+ "\n" + "Format: " + getFormat() + " \n" + "Connection-Type: " + getConnection();
+		System.out.println(s);
+		return s;
 	}
 
 }
