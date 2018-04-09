@@ -41,6 +41,7 @@ public class MainServerView extends JFrame {
 	private JTextPane servCons;
 	private JLabel queueSize;
 	private JLabel queueSizeV;
+	private JButton serveRequests;
 
 	/**
 	 * Launch the application.
@@ -141,6 +142,11 @@ public class MainServerView extends JFrame {
 		queueSizeV = new JLabel("");
 		queueSizeV.setBounds(355, 11, 69, 14);
 		servPnl1.add(queueSizeV);
+		
+		serveRequests = new JButton("Server Requests");
+		serveRequests.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		serveRequests.setBounds(242, 32, 112, 23);
+		servPnl1.add(serveRequests);
 
 		addClientBtn = new JButton("Add Client");
 		addClientBtn.setBounds(147, 272, 142, 23);
@@ -148,6 +154,14 @@ public class MainServerView extends JFrame {
 		mainPnl.add(addClientBtn);
 
 		frame.setVisible(true);
+	}
+
+	public JButton getServeRequests() {
+		return serveRequests;
+	}
+
+	public void setServeRequests(JButton serveRequests) {
+		this.serveRequests = serveRequests;
 	}
 
 	public JLabel getQueueSizeV() {

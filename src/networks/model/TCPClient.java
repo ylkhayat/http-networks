@@ -127,9 +127,8 @@ public class TCPClient {
 						}
 						if (lineBack.getConnection().equals(ConnectionType.CLOSE))
 							inst.stop();
+						current = null;
 					} catch (OptionalDataException e) {
-						System.out.println(e.eof + "    " + e.length);
-
 						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();

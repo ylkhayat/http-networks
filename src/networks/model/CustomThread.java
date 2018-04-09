@@ -6,6 +6,14 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class CustomThread extends Thread {
+	public boolean isServe() {
+		return serve;
+	}
+
+	public static void setServe(boolean serve) {
+		CustomThread.serve = serve;
+	}
+
 	Socket socket = null;
 	TCPServer server = null;
 	ObjectInputStream streamIn = null;
@@ -14,10 +22,14 @@ public class CustomThread extends Thread {
 	boolean joined = false;
 	boolean isHigher = false;
 	Queue<HttpRequest> req = null;
+	static boolean serve = false;
+	Queue<HttpRequest> personalQueue = null;
 
-	public CustomThread(Socket sock, Queue<HttpRequest> requests) {
+	public CustomThread(Socket sock, Queue<HttpRequest> requests, boolean serve) {
 		socket = sock;
 		req = requests;
+		this.serve = serve;
+		personalQueue = new LinkedList<HttpRequest>();
 		try {
 			streamIn = new ObjectInputStream(socket.getInputStream());
 			outToClient = new ObjectOutputStream(socket.getOutputStream());
@@ -32,20 +44,12 @@ public class CustomThread extends Thread {
 	public void run() {
 		try {
 			do {
+
 				HttpRequest msg;
 				msg = (HttpRequest) streamIn.readObject();
 				req.add(msg);
-				HttpResponse resp = respond(msg);
-				req.remove();
-				outToClient.writeObject(resp);
-//				if(resp.getConnection().equals(ConnectionType.CLOSE))
-//					close();
-				if (resp.getStatus().equals("200 OK")) {
-					File file = new File("docroot/" + msg.getUrl());
-					System.out.println(msg.getUrl());
-					sendfile(outToClient, file);
-				}
-
+				personalQueue.add(msg);
+				System.out.println("Abl Obaa");
 			} while (true);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -54,6 +58,26 @@ public class CustomThread extends Thread {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void respondCustom() throws IOException {
+		HttpRequest msg = null;
+		if (personalQueue.size() > 0)
+			msg = personalQueue.remove();
+		if (msg != null) {
+			System.out.println("Obaa");
+			HttpResponse resp = respond(msg);
+			req.remove();
+			outToClient.writeObject(resp);
+			// if(resp.getConnection().equals(ConnectionType.CLOSE))
+			// close();
+			if (resp.getStatus().equals("200 OK")) {
+				File file = new File("docroot/" + msg.getUrl());
+				System.out.println(msg.getUrl());
+				sendfile(outToClient, file);
+			}
+			serve = false;
+		}
 	}
 
 	public void listFilesForFolder(File folder, ArrayList<String> s) {

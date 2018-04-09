@@ -8,7 +8,9 @@ import java.util.Queue;
 public class TCPServer extends Thread {
 	ServerSocket server = null;
 	Socket socket = null;
-	Queue<HttpRequest> requests = null;
+	static Queue<HttpRequest> requests = null;
+	boolean serve = false;
+	LinkedList<CustomThread> threads;
 
 	public Queue<HttpRequest> getRequests() {
 		return requests;
@@ -18,7 +20,18 @@ public class TCPServer extends Thread {
 		this.requests = requests;
 	}
 
+	public boolean isServe() {
+		return serve;
+	}
+
+	public void serve() throws IOException {
+		for (CustomThread thread : threads) {
+			thread.respondCustom();
+		}
+	}
+
 	public TCPServer(int port, String host, int serverPort) {
+		threads = new LinkedList<CustomThread>();
 		try {
 			System.out.println("Binding to port " + port + ", please wait  ...");
 			server = new ServerSocket(port);
@@ -48,7 +61,8 @@ public class TCPServer extends Thread {
 
 	public void addThread(Socket socket) {
 		System.out.println("Client accepted: " + socket);
-		CustomThread client = new CustomThread(socket, requests);
+		CustomThread client = new CustomThread(socket, requests, serve);
+		threads.add(client);
 		client.start();
 	}
 
