@@ -15,6 +15,7 @@ public class TCPClient {
 	Socket socket = null;
 	BufferedReader console = null;
 	ObjectOutputStream streamOut = null;
+	TCPClient inst;
 
 	public HttpResponse getCurrent() {
 		return current;
@@ -29,6 +30,7 @@ public class TCPClient {
 	boolean joined;
 
 	public TCPClient(String host, int serverPort) throws UnknownHostException, IOException {
+		inst = this;
 		socket = new Socket(host, serverPort);
 		System.out.println("Connected: " + socket);
 		console = new BufferedReader(new InputStreamReader(System.in));
@@ -120,7 +122,8 @@ public class TCPClient {
 							Desktop desktop = Desktop.getDesktop();
 							desktop.open(fileBack);
 						}
-
+						if(lineBack.getConnection().equals(ConnectionType.CLOSE))
+							inst.stop();
 					} catch (OptionalDataException e) {
 						System.out.println(e.eof + "    " + e.length);
 
@@ -154,7 +157,7 @@ public class TCPClient {
 			return fileName.substring(dotInd + 1).toLowerCase();
 	}
 
-	public String request(String line) {
+	public String request(String line, Object object) {
 		HttpRequest con = new HttpRequest();
 		boolean passed = false;
 		try {
@@ -185,13 +188,14 @@ public class TCPClient {
 			default:
 				System.out.println("Please enter a valid format.");
 			}
-			line = "alive";
+			line = object.toString();
+			System.out.println(line);
 			switch (line) {
-			case "alive":
+			case "Keep Alive":
 				con.setConnection(ConnectionType.KEEP_ALIVE);
 				passed = true;
 				break;
-			case "close":
+			case "Close":
 				con.setConnection(ConnectionType.CLOSE);
 				passed = true;
 				break;

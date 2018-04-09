@@ -29,6 +29,9 @@ import javax.swing.JTextArea;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JTextPane;
+import javax.swing.JSpinner;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class TCPClientView extends JFrame {
 
@@ -46,6 +49,7 @@ public class TCPClientView extends JFrame {
 	private JScrollPane containerCustom;
 	private JPanel chatPnl;
 	private JTextPane textPane;
+	private JComboBox comboBox;
 
 	public JScrollPane getScrollPane_1() {
 		return scrollPnlCustom;
@@ -109,17 +113,24 @@ public class TCPClientView extends JFrame {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		scrollPane.setBounds(0, 24, 111, 237);
+		scrollPane.setBounds(0, 24, 111, 178);
 		usersPnl.add(scrollPane);
-
-		docRootPanel = new JPanel();
-		scrollPane.setViewportView(docRootPanel);
-		docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
+		
+				docRootPanel = new JPanel();
+				scrollPane.setViewportView(docRootPanel);
+				docRootPanel.setLayout(new BoxLayout(docRootPanel, BoxLayout.Y_AXIS));
 
 		JLabel lblNewLabel = new JLabel("Doc-Root");
 		lblNewLabel.setBounds(2, 0, 109, 25);
 		usersPnl.add(lblNewLabel);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		comboBox = new JComboBox();
+		comboBox.setEditable(true);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Keep Alive", "Close"}));
+		comboBox.setSelectedIndex(0);
+		comboBox.setBounds(10, 213, 91, 20);
+		usersPnl.add(comboBox);
 
 		chatPnl = new JPanel();
 		chatPnl.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -136,6 +147,7 @@ public class TCPClientView extends JFrame {
 		msgPnl.setViewportView(scrollPnlCustom);
 
 		textPane = new JTextPane();
+		textPane.setFont(new Font("MS Gothic", Font.PLAIN, 11));
 		scrollPnlCustom.setViewportView(textPane);
 
 		serverPortLbl = new JLabel("");
@@ -168,6 +180,14 @@ public class TCPClientView extends JFrame {
 	// public void setAreas(Hashtable<String, JTextArea> areas) {
 	// this.areas = areas;
 	// }
+
+	public JComboBox getComboBox() {
+		return comboBox;
+	}
+
+	public void setComboBox(JComboBox comboBox) {
+		this.comboBox = comboBox;
+	}
 
 	public JScrollPane getScrollPnlCustom() {
 		return scrollPnlCustom;

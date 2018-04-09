@@ -13,6 +13,8 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 
+import networks.model.ConnectionType;
+import networks.model.Formats;
 import networks.model.TCPClient;
 import networks.model.TCPServer;
 import networks.view.MainServerView;
@@ -73,28 +75,45 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 			});
 			client.start();
 		} else if (a.getSource() instanceof JButton) {
-			System.out.println("Hena");
 			JButton temp = (JButton) a.getSource();
 
 			for (TCPClientView tcpClientView : clientView) {
 				System.out.println(temp.getParent().equals(tcpClientView.getChatPnl()));
 				if (temp.getParent().equals(tcpClientView.getDocRootPanel())) {
 					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
-					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
-							+ "--------REQUEST---------" + '\n' + current.request(temp.getText()) + '\n');
+					tcpClientView.getTextPane()
+							.setText(tcpClientView.getTextPane().getText() + "--------REQUEST---------" + '\n'
+									+ current.request(temp.getText(), tcpClientView.getComboBox().getSelectedItem())
+									+ '\n');
 					while (current.getCurrent() == null)
 						;
 					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
 							+ "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n');
+					if (current.getCurrent().getConnection().equals(ConnectionType.CLOSE)) {
+						tcpClientView.getFrmConversationWindow().setVisible(false);
+						tcpClientView.getFrmConversationWindow().dispose();
+						clients.remove(current);
+						clientView.remove(tcpClientView);
+
+					}
 				} else if (temp.getParent().equals(tcpClientView.getChatPnl())) {
 					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
 					tcpClientView.getTextPane()
 							.setText(tcpClientView.getTextPane().getText() + "--------REQUEST---------" + '\n'
-									+ current.request(tcpClientView.getInputField().getText()) + '\n');
+									+ current.request(tcpClientView.getInputField().getText(),
+											tcpClientView.getComboBox().getSelectedItem())
+									+ '\n');
 					while (current.getCurrent() == null)
 						;
 					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
 							+ "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n');
+					if (current.getCurrent().getConnection().equals(ConnectionType.CLOSE)) {
+						tcpClientView.getFrmConversationWindow().setVisible(false);
+						tcpClientView.getFrmConversationWindow().dispose();
+						clients.remove(current);
+						clientView.remove(tcpClientView);
+						tcpClientView.dispose();
+					}
 				}
 			}
 		}

@@ -36,8 +36,10 @@ public class CustomThread extends Thread {
 				msg = (HttpRequest) streamIn.readObject();
 				req.add(msg);
 				HttpResponse resp = respond(msg);
-
+				req.remove();
 				outToClient.writeObject(resp);
+//				if(resp.getConnection().equals(ConnectionType.CLOSE))
+//					close();
 				if (resp.getStatus().equals("200 OK")) {
 					File file = new File("docroot/" + msg.getUrl());
 					System.out.println(msg.getUrl());
