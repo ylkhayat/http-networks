@@ -69,8 +69,12 @@ public class HttpResponse implements Serializable {
 	}
 
 	public String toStringCustom() {
-		String s = getStatus() + " " + getVersion() + "\n" + "Time-Stamp: " + getTimestamp() + "\n" + "Format: "
+		return getStatus() + " " + getVersion() + "\n" + "Time-Stamp: " + getTimestamp() + "\n" + "Format: "
 				+ getFormat() + "\n" + "Connection-Type: " + getConnection();
-		return s;
+	}
+
+	public String toStringEih() {
+		return "Status: " + getStatus() + "\n Version: " + getVersion() + "\n Timestamp: " + getTimestamp()
+				+ "\n Format: " + getFormat() + "\n Connection: " + getConnection();
 	}
 }

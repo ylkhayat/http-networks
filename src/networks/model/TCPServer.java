@@ -3,11 +3,20 @@ package networks.model;
 import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class TCPServer extends Thread {
 	ServerSocket server = null;
 	Socket socket = null;
-	LinkedList<HttpRequest> requests = null;
+	Queue<HttpRequest> requests = null;
+
+	public Queue<HttpRequest> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(Queue<HttpRequest> requests) {
+		this.requests = requests;
+	}
 
 	public TCPServer(int port, String host, int serverPort) {
 		try {
@@ -16,14 +25,22 @@ public class TCPServer extends Thread {
 			requests = new LinkedList<HttpRequest>();
 			// socket = new Socket(host, serverPort);
 			System.out.println("Server started: " + server);
-			while (true) {
-				try {
-					System.out.println("Waiting for a client ...");
-					addThread(server.accept());
-				} catch (IOException ie) {
-					System.out.println("Acceptance Error: " + ie);
+			Thread thread = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							System.out.println("Waiting for a client ...");
+							addThread(server.accept());
+						} catch (IOException ie) {
+							System.out.println("Acceptance Error: " + ie);
+						}
+					}
+
 				}
-			}
+			});
+			thread.start();
 		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}

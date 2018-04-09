@@ -28,6 +28,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.DropMode;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 public class MainServerView extends JFrame {
 
@@ -37,7 +38,9 @@ public class MainServerView extends JFrame {
 	private JLabel servPortVLbl1;
 	private JLabel statLbl;
 	private JButton addClientBtn;
-	private JTextArea servCons;
+	private JTextPane servCons;
+	private JLabel queueSize;
+	private JLabel queueSizeV;
 
 	/**
 	 * Launch the application.
@@ -128,9 +131,16 @@ public class MainServerView extends JFrame {
 		scrollPane.setBounds(10, 61, 414, 124);
 		servPnl1.add(scrollPane);
 		
-				servCons = new JTextArea();
-				scrollPane.setViewportView(servCons);
-				servCons.setEditable(false);
+		servCons = new JTextPane();
+		scrollPane.setViewportView(servCons);
+		
+		queueSize = new JLabel("Queue Size:");
+		queueSize.setBounds(217, 11, 118, 14);
+		servPnl1.add(queueSize);
+		
+		queueSizeV = new JLabel("");
+		queueSizeV.setBounds(355, 11, 69, 14);
+		servPnl1.add(queueSizeV);
 
 		addClientBtn = new JButton("Add Client");
 		addClientBtn.setBounds(147, 272, 142, 23);
@@ -138,6 +148,22 @@ public class MainServerView extends JFrame {
 		mainPnl.add(addClientBtn);
 
 		frame.setVisible(true);
+	}
+
+	public JLabel getQueueSizeV() {
+		return queueSizeV;
+	}
+
+	public void setQueueSizeV(JLabel queueSizeV) {
+		this.queueSizeV = queueSizeV;
+	}
+
+	public JTextPane getServCons() {
+		return servCons;
+	}
+
+	public void setServCons(JTextPane servCons) {
+		this.servCons = servCons;
 	}
 
 	public JFrame getFrame() {
@@ -187,14 +213,4 @@ public class MainServerView extends JFrame {
 	public void setAddClientBtn(JButton addClientBtn) {
 		this.addClientBtn = addClientBtn;
 	}
-
-	public JTextArea getServCons() {
-		return servCons;
-	}
-
-	public void setServCons(JTextArea servCons) {
-		this.servCons = servCons;
-	}
-
-	
 }

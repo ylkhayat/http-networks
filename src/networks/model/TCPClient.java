@@ -15,7 +15,9 @@ public class TCPClient {
 	Socket socket = null;
 	BufferedReader console = null;
 	ObjectOutputStream streamOut = null;
+	static int count = 0;
 	TCPClient inst;
+	int counter = 0;
 
 	public HttpResponse getCurrent() {
 		return current;
@@ -36,7 +38,8 @@ public class TCPClient {
 		console = new BufferedReader(new InputStreamReader(System.in));
 		streamOut = new ObjectOutputStream(socket.getOutputStream());
 		inFromServer = new ObjectInputStream(socket.getInputStream());
-		new File("ClientRecFiles").mkdirs();
+		counter = count;
+		new File("ClientRecFiles" + count++).mkdirs();
 		Thread write = new Thread(new Runnable() {
 			public void run() {
 				String line = "";
@@ -116,13 +119,13 @@ public class TCPClient {
 						if (lineBack.getStatus().equals("200 OK")) {
 							String filename = lineBack.getUrl();
 
-							File fileBack = new File("ClientRecFiles/" + filename);
+							File fileBack = new File("ClientRecFiles" + counter + "/" + filename);
 							byte[] content = (byte[]) inFromServer.readObject();
 							Files.write(fileBack.toPath(), content);
 							Desktop desktop = Desktop.getDesktop();
 							desktop.open(fileBack);
 						}
-						if(lineBack.getConnection().equals(ConnectionType.CLOSE))
+						if (lineBack.getConnection().equals(ConnectionType.CLOSE))
 							inst.stop();
 					} catch (OptionalDataException e) {
 						System.out.println(e.eof + "    " + e.length);

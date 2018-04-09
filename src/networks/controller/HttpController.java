@@ -43,12 +43,14 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 			Thread serverThread = new Thread(new Runnable() {
 				public void run() {
 					server = new TCPServer(6789, "Youssef", 6888);
+					serverView.getQueueSizeV().setText(server.getRequests().size() + "");
 				}
 			});
 			serverThread.start();
 			serverView.getStatLbl1().setText("Online");
 			serverView.getStatLbl1().setForeground(Color.GREEN);
 			serverView.getServPortVLbl1().setText("Port: 6789");
+
 			serverView.getAddClientBtn().setEnabled(true);
 		} else if (a.getSource() instanceof JButton && a.getSource().equals(serverView.getAddClientBtn())) {
 			Thread client = new Thread(new Runnable() {
@@ -59,6 +61,7 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 						TCPClientView clientViewTemp = new TCPClientView();
 						clientViewTemp.getBtnRequest().addActionListener(inst);
 						clientViewTemp.getFrmConversationWindow().setVisible(true);
+						clientViewTemp.getFrmConversationWindow().setTitle("USER N=" + clientView.size());
 						clientViewTemp.setServerPortLbl("6789");
 						clientView.add(clientViewTemp);
 						clientViewTemp.setClient(clientTemp);
@@ -77,18 +80,24 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 		} else if (a.getSource() instanceof JButton) {
 			JButton temp = (JButton) a.getSource();
 
-			for (TCPClientView tcpClientView : clientView) {
+			for (int i = 0; i < clientView.size(); i++) {
+				TCPClientView tcpClientView = clientView.get(i);
 				System.out.println(temp.getParent().equals(tcpClientView.getChatPnl()));
 				if (temp.getParent().equals(tcpClientView.getDocRootPanel())) {
 					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
-					tcpClientView.getTextPane()
-							.setText(tcpClientView.getTextPane().getText() + "--------REQUEST---------" + '\n'
-									+ current.request(temp.getText(), tcpClientView.getComboBox().getSelectedItem())
-									+ '\n');
+					String tempStrReq = "--------REQUEST---------" + '\n'
+							+ current.request(temp.getText(), tcpClientView.getComboBox().getSelectedItem()) + '\n';
+				
+					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText() + tempStrReq);
+					serverView.getServCons().setText(
+							serverView.getServCons().getText() + "--------USER N=" + i + "-------" + '\n' + tempStrReq);
 					while (current.getCurrent() == null)
 						;
-					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
-							+ "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n');
+					String tempStrRes = "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n';
+					tcpClientView.getTextPane().setText("--------USER N=" + i + "-------" + '\n'
+							+ tcpClientView.getTextPane().getText() + tempStrRes);
+					serverView.getServCons().setText(
+							serverView.getServCons().getText() + "--------USER N=" + i + "-------" + '\n' + tempStrRes);
 					if (current.getCurrent().getConnection().equals(ConnectionType.CLOSE)) {
 						tcpClientView.getFrmConversationWindow().setVisible(false);
 						tcpClientView.getFrmConversationWindow().dispose();
@@ -98,15 +107,19 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 					}
 				} else if (temp.getParent().equals(tcpClientView.getChatPnl())) {
 					TCPClient current = clients.get(clientView.indexOf(tcpClientView));
-					tcpClientView.getTextPane()
-							.setText(tcpClientView.getTextPane().getText() + "--------REQUEST---------" + '\n'
-									+ current.request(tcpClientView.getInputField().getText(),
-											tcpClientView.getComboBox().getSelectedItem())
-									+ '\n');
+					String tempStrReq = "--------REQUEST---------" + '\n'
+							+ current.request(tcpClientView.getInputField().getText(),
+									tcpClientView.getComboBox().getSelectedItem())
+							+ '\n';
+					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText() + tempStrReq);
+					serverView.getServCons().setText(
+							serverView.getServCons().getText() + "--------USER N=" + i + "-------" + '\n' + tempStrReq);
 					while (current.getCurrent() == null)
 						;
-					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText()
-							+ "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n');
+					String tempStrRes = "--------RESPONSE-------" + '\n' + current.getCurrent().toStringCustom() + '\n';
+					tcpClientView.getTextPane().setText(tcpClientView.getTextPane().getText() + tempStrRes);
+					serverView.getServCons().setText(
+							serverView.getServCons().getText() + "--------USER N=" + i + "-------" + '\n' + tempStrRes);
 					if (current.getCurrent().getConnection().equals(ConnectionType.CLOSE)) {
 						tcpClientView.getFrmConversationWindow().setVisible(false);
 						tcpClientView.getFrmConversationWindow().dispose();

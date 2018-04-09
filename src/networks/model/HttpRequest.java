@@ -66,10 +66,13 @@ public class HttpRequest implements Serializable {
 	}
 
 	public String toStringCustom() {
-		String s = getMethod() + ": " + getUrl() + "\n" + "Version: " + getVersion() + "\n" + "Host: " + getHost()
-				+ "\n" + "Format: " + getFormat() + " \n" + "Connection-Type: " + getConnection();
-		System.out.println(s);
-		return s;
+		return getMethod() + ": " + getUrl() + "\n" + "Version: " + getVersion() + "\n" + "Host: " + getHost() + "\n"
+				+ "Format: " + getFormat() + " \n" + "Connection-Type: " + getConnection();
+	}
+
+	public String toStringEih() {
+		return "Method: " + getMethod() + "\n URL: " + getUrl() + "\n Version: " + getVersion() + "\n Hostname: "
+				+ getHost() + "\n Format: " + getFormat() + " \n" + "Connection: " + getConnection();
 	}
 
 }
