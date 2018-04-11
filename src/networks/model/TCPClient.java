@@ -15,9 +15,8 @@ public class TCPClient {
 	Socket socket = null;
 	BufferedReader console = null;
 	ObjectOutputStream streamOut = null;
-	static int count = 0;
 	TCPClient inst;
-	int counter = 0;
+	int id = 0;
 
 	public HttpResponse getCurrent() {
 		return current;
@@ -31,15 +30,15 @@ public class TCPClient {
 	HttpResponse current;
 	boolean joined;
 
-	public TCPClient(String host, int serverPort) throws UnknownHostException, IOException {
+	public TCPClient(String host, int serverPort, int id) throws UnknownHostException, IOException {
 		inst = this;
 		socket = new Socket(host, serverPort);
 		System.out.println("Connected: " + socket);
 		console = new BufferedReader(new InputStreamReader(System.in));
 		streamOut = new ObjectOutputStream(socket.getOutputStream());
 		inFromServer = new ObjectInputStream(socket.getInputStream());
-		counter = count;
-		new File("ClientRecFiles" + count++).mkdirs();
+		this.id = id;
+		new File("ClientRecFiles" + id).mkdirs();
 		Thread write = new Thread(new Runnable() {
 			public void run() {
 				String line = "";
@@ -119,7 +118,7 @@ public class TCPClient {
 						if (lineBack.getStatus().equals("200 OK")) {
 							String filename = lineBack.getUrl();
 
-							File fileBack = new File("ClientRecFiles" + counter + "/" + filename);
+							File fileBack = new File("ClientRecFiles" + id + "/" + filename);
 							byte[] content = (byte[]) inFromServer.readObject();
 							Files.write(fileBack.toPath(), content);
 							Desktop desktop = Desktop.getDesktop();
@@ -142,6 +141,14 @@ public class TCPClient {
 		});
 		read.start();
 
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public static String getExtension(String fileName) {
@@ -226,7 +233,7 @@ public class TCPClient {
 	}
 
 	public static void main(String argv[]) throws Exception {
-		TCPClient client = new TCPClient("sobky", 6789);
+//		TCPClient client = new TCPClient("sobky", 6789);
 
 	}
 

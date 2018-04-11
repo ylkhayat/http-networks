@@ -42,6 +42,7 @@ public class MainServerView extends JFrame {
 	private JLabel queueSize;
 	private JLabel queueSizeV;
 	private JButton serveRequests;
+	private JLabel clientCountV;
 
 	/**
 	 * Launch the application.
@@ -117,7 +118,7 @@ public class MainServerView extends JFrame {
 		servPnl1.setLayout(null);
 
 		JLabel servPortLbl1 = new JLabel("Server Port:");
-		servPortLbl1.setBounds(10, 11, 118, 14);
+		servPortLbl1.setBounds(10, 11, 75, 14);
 		servPnl1.add(servPortLbl1);
 
 		JLabel lblNewLabel_3 = new JLabel("Console:");
@@ -125,7 +126,7 @@ public class MainServerView extends JFrame {
 		servPnl1.add(lblNewLabel_3);
 
 		servPortVLbl1 = new JLabel("");
-		servPortVLbl1.setBounds(138, 11, 69, 14);
+		servPortVLbl1.setBounds(95, 11, 69, 14);
 		servPnl1.add(servPortVLbl1);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -136,17 +137,25 @@ public class MainServerView extends JFrame {
 		scrollPane.setViewportView(servCons);
 		
 		queueSize = new JLabel("Queue Size:");
-		queueSize.setBounds(217, 11, 118, 14);
+		queueSize.setBounds(167, 11, 75, 14);
 		servPnl1.add(queueSize);
 		
 		queueSizeV = new JLabel("");
-		queueSizeV.setBounds(355, 11, 69, 14);
+		queueSizeV.setBounds(242, 11, 31, 14);
 		servPnl1.add(queueSizeV);
 		
 		serveRequests = new JButton("Server Requests");
 		serveRequests.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		serveRequests.setBounds(242, 32, 112, 23);
 		servPnl1.add(serveRequests);
+		
+		JLabel lblClientsCountSize = new JLabel("Clients Count:");
+		lblClientsCountSize.setBounds(283, 11, 87, 14);
+		servPnl1.add(lblClientsCountSize);
+		
+		clientCountV = new JLabel("");
+		clientCountV.setBounds(370, 11, 31, 14);
+		servPnl1.add(clientCountV);
 
 		addClientBtn = new JButton("Add Client");
 		addClientBtn.setBounds(147, 272, 142, 23);
@@ -154,6 +163,14 @@ public class MainServerView extends JFrame {
 		mainPnl.add(addClientBtn);
 
 		frame.setVisible(true);
+	}
+
+	public JLabel getClientCountV() {
+		return clientCountV;
+	}
+
+	public void setClientCountV(JLabel clientCountV) {
+		this.clientCountV = clientCountV;
 	}
 
 	public JButton getServeRequests() {

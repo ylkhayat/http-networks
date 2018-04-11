@@ -61,23 +61,37 @@ public class CustomThread extends Thread {
 	}
 
 	public void respondCustom() throws IOException {
-		HttpRequest msg = null;
-		if (personalQueue.size() > 0)
-			msg = personalQueue.remove();
-		if (msg != null) {
-			System.out.println("Obaa");
-			HttpResponse resp = respond(msg);
-			req.remove();
-			outToClient.writeObject(resp);
-			// if(resp.getConnection().equals(ConnectionType.CLOSE))
-			// close();
-			if (resp.getStatus().equals("200 OK")) {
-				File file = new File("docroot/" + msg.getUrl());
-				System.out.println(msg.getUrl());
-				sendfile(outToClient, file);
+		Thread response = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				HttpRequest msg = null;
+				if (personalQueue.size() > 0)
+					msg = personalQueue.remove();
+				if (msg != null) {
+					System.out.println("Obaa");
+					HttpResponse resp = respond(msg);
+					req.remove();
+					try {
+						outToClient.writeObject(resp);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					// if(resp.getConnection().equals(ConnectionType.CLOSE))
+					// close();
+					if (resp.getStatus().equals("200 OK")) {
+						File file = new File("docroot/" + msg.getUrl());
+						System.out.println(msg.getUrl());
+						sendfile(outToClient, file);
+					}
+					serve = false;
+				}
+
 			}
-			serve = false;
-		}
+		});
+		response.start();
+
 	}
 
 	public void listFilesForFolder(File folder, ArrayList<String> s) {

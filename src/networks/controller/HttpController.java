@@ -40,6 +40,7 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 
 	@Override
 	public void actionPerformed(ActionEvent a) {
+
 		if (a.getSource() instanceof JButton && a.getSource().equals(serverView.getCreateServerBtn())) {
 			Thread serverThread = new Thread(new Runnable() {
 				public void run() {
@@ -52,11 +53,14 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 			serverView.getStatLbl1().setForeground(Color.GREEN);
 			serverView.getServPortVLbl1().setText("Port: 6789");
 			serverView.getAddClientBtn().setEnabled(true);
+			serverView.getCreateServerBtn().setEnabled(false);
+			if (server != null)
+				serverView.getClientCountV().setText(server.getThreads().size() + "");
 		} else if (a.getSource() instanceof JButton && a.getSource().equals(serverView.getAddClientBtn())) {
 			Thread client = new Thread(new Runnable() {
 				public void run() {
 					try {
-						TCPClient clientTemp = new TCPClient("Youssef", 6789);
+						TCPClient clientTemp = new TCPClient("Youssef", 6789, server.getThreads().size());
 						clients.add(clientTemp);
 						TCPClientView clientViewTemp = new TCPClientView();
 						clientViewTemp.getBtnRequest().addActionListener(inst);
@@ -70,6 +74,8 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 							jButton.setBackground(Color.WHITE);
 							clientViewTemp.getDocRootPanel().add(jButton);
 						}
+						if (server != null)
+							serverView.getClientCountV().setText(server.getThreads().size() + "");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -103,6 +109,7 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 							if (current.getCurrent().getConnection().equals(ConnectionType.CLOSE)) {
 								tcpClientView.getFrmConversationWindow().setVisible(false);
 								tcpClientView.getFrmConversationWindow().revalidate();
+								server.getThreads().remove(current.getId());
 								tcpClientView.revalidate();
 								tcpClientView.getFrmConversationWindow().dispose();
 								tcpClientView.dispose();
@@ -110,7 +117,8 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 								clientView.remove(tcpClientView);
 
 							}
-
+							if (server != null)
+								serverView.getClientCountV().setText(server.getThreads().size() + "");
 						}
 					});
 					responseThread.start();
@@ -134,16 +142,17 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 							if (current.getCurrent().getConnection().equals(ConnectionType.CLOSE)) {
 								tcpClientView.getFrmConversationWindow().setVisible(false);
 								tcpClientView.getFrmConversationWindow().dispose();
+								server.getThreads().remove(current.getId());
 								clients.remove(current);
 								clientView.remove(tcpClientView);
 								tcpClientView.dispose();
 							}
-
+							if (server != null)
+								serverView.getClientCountV().setText(server.getThreads().size() + "");
 						}
 					});
 					responseThread.start();
 				} else if (a.getSource() instanceof JButton && a.getSource().equals(serverView.getServeRequests())) {
-					System.out.println("Yalahwiiii");
 					try {
 						server.serve();
 					} catch (IOException e) {
@@ -151,6 +160,8 @@ public class HttpController implements ActionListener, KeyListener, MouseListene
 						e.printStackTrace();
 					}
 					serverView.getQueueSizeV().setText(server.getRequests().size() + "");
+					if (server != null)
+						serverView.getClientCountV().setText(server.getThreads().size() + "");
 				}
 			}
 		}

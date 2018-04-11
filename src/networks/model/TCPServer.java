@@ -2,6 +2,7 @@ package networks.model;
 
 import java.io.*;
 import java.net.*;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -10,7 +11,16 @@ public class TCPServer extends Thread {
 	Socket socket = null;
 	static Queue<HttpRequest> requests = null;
 	boolean serve = false;
-	LinkedList<CustomThread> threads;
+	Hashtable<Integer, CustomThread> threads;
+	int counter = 0;
+
+	public Hashtable<Integer, CustomThread> getThreads() {
+		return threads;
+	}
+
+	public void setThreads(Hashtable<Integer, CustomThread> threads) {
+		this.threads = threads;
+	}
 
 	public Queue<HttpRequest> getRequests() {
 		return requests;
@@ -25,13 +35,13 @@ public class TCPServer extends Thread {
 	}
 
 	public void serve() throws IOException {
-		for (CustomThread thread : threads) {
-			thread.respondCustom();
+		for (Object thread : threads.keySet().toArray()) {
+			threads.get(thread).respondCustom();
 		}
 	}
 
 	public TCPServer(int port, String host, int serverPort) {
-		threads = new LinkedList<CustomThread>();
+		threads = new Hashtable<Integer, CustomThread>();
 		try {
 			System.out.println("Binding to port " + port + ", please wait  ...");
 			server = new ServerSocket(port);
@@ -62,7 +72,7 @@ public class TCPServer extends Thread {
 	public void addThread(Socket socket) {
 		System.out.println("Client accepted: " + socket);
 		CustomThread client = new CustomThread(socket, requests, serve);
-		threads.add(client);
+		threads.put(counter++, client);
 		client.start();
 	}
 
